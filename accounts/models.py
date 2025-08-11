@@ -17,6 +17,8 @@ User_role={
 class CustomUser(AbstractUser):
       role=models.CharField(max_length=10, choices=User_role, default="Guest")
       phone=models.CharField(max_length=15, blank=True, null=True)
+
       
+          
       def __str__(self):
             return self.username 

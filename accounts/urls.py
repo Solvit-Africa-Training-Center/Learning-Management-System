@@ -1,9 +1,10 @@
 from  django.urls import path,include
-from .views import RegisterUserViewSet
+from .views import RegisterUserViewSet,LoginViewSet
 from rest_framework import routers
 
 router=routers.DefaultRouter()
 router.register("user",RegisterUserViewSet)
+router.register("login",LoginViewSet,basename="login")
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
