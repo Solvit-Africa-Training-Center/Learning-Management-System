@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from django.contrib.auth import  authenticate
 from accounts.models import CustomUser
 
 
@@ -35,3 +36,29 @@ class RegisterUserSerializer(serializers.ModelSerializer):
             role=validated_data.get("role", "Guest")
         )
         return user
+class AuthenticationSerializer(serializers.ModelSerializer):
+    username=serializers.CharField(required=True)
+    password=serializers.CharField(required=True, write_only=True)
+
+
+    class Meta:
+        model=CustomUser
+        fields=["username","password"]
+
+    def validate(self, data):
+        username = data.get("username")
+        password = data.get("password")
+
+        if not username or not password:
+            raise serializers.ValidationError("All fields are required") 
+        else:
+            user = authenticate(username=username, password=password)
+        if not user:
+            raise serializers.ValidationError("invalid username or password")
+        data["user"] = user
+        return data
+
+        
+
+
+    
