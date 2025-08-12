@@ -35,3 +35,4 @@ class RegisterUserSerializer(serializers.ModelSerializer):
             role=validated_data.get("role", "Guest")
         )
         return user
+    
