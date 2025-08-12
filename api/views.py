@@ -27,15 +27,15 @@ class LessonCreateView(generics.CreateAPIView):
 
 
 class QuizCreateView(generics.CreateAPIView):
-    serializer_class=QuizSerializer
-    permission_classes=[permissions.IsAuthenticated]
-    
+    serializer_class = QuizSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    def perform_create(self, serialzer):
-        instractor=getattr(self.request.user,'instructor')
-        if not instractor:
+    def perform_create(self, serializer):
+        instructor = getattr(self.request.user, 'instructor', None)
+        if not instructor:
             raise PermissionDenied("Only instructors can create quizzes.")
-        lesson=serialzer.validated_data['lesson']
-        if lesson.course.instructor !=instractor:
+        lesson = serializer.validated_data['lesson']
+        if lesson.course.instructor != instructor:
             raise PermissionDenied("You do not have permission to create quizzes for this lesson.")
-        serialzer.save(instructor=instractor)
+
+        serializer.save()

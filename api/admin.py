@@ -47,7 +47,7 @@ class EnrollmentsAdmin(admin.ModelAdmin):
 
 @admin.register(Lesson)
 class LessonsAdmin(admin.ModelAdmin):
-    list_display = ["title","course","description","instractor"]
+    list_display = ["title","course","description","instructor"]
 
 
 @admin.register(Question)

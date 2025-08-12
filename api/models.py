@@ -59,7 +59,7 @@ class Enrollment(models.Model):
 
 
 class Lesson(models.Model):
-    instractor = models.ForeignKey(Instructor, on_delete=models.CASCADE, related_name='lessons',null=True, blank=True)
+    instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE, related_name='lessons',null=True, blank=True)
     title = models.CharField(max_length=255)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lessons')
     description = models.TextField()
@@ -92,8 +92,4 @@ class Choice(models.Model):
     def __str__(self):
         return self.choice_text
 
-<<<<<<< HEAD
-=======
 
-
->>>>>>> instractor-action
