@@ -1,4 +1,6 @@
 /env
+__pycache__/
+*.pyc
 
 echo "__pycache__/" >> .gitignore
 echo "*.pyc" >> .gitignore
