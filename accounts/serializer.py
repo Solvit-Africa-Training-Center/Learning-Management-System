@@ -3,6 +3,7 @@ from rest_framework import serializers
 from accounts.models import CustomUser
 
 
+
 class RegisterUserSerializer(serializers.ModelSerializer):
     first_name=serializers.CharField(required=True)
     username=serializers.CharField(required=True)
@@ -35,3 +36,8 @@ class RegisterUserSerializer(serializers.ModelSerializer):
             role=validated_data.get("role", "Guest")
         )
         return user
+    
+
+
+
+
