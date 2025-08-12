@@ -1,6 +1,7 @@
 from django.db import models
 import datetime
 from accounts.models import CustomUser
+# from courses.models import Student, Instructor, Course, Enrollment, Lesson, Quiz, Question, Choice
 
 class Student(models.Model): 
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
@@ -50,6 +51,9 @@ class Course(models.Model):
 
     def __str__(self):
         return self.course_name
+    # payment status
+    def is_eligible_for_enrollment(self):
+        return hasattr(self, 'payment_status') and self.payment_status.approved
 
 
 class Enrollment(models.Model):
@@ -91,5 +95,3 @@ class Choice(models.Model):
 
     def __str__(self):
         return self.choice_text
-
-
