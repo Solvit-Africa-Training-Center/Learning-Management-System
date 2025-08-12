@@ -4,6 +4,7 @@ from django.contrib.auth import  authenticate
 from accounts.models import CustomUser
 
 
+
 class RegisterUserSerializer(serializers.ModelSerializer):
     first_name=serializers.CharField(required=True)
     username=serializers.CharField(required=True)
@@ -36,6 +37,7 @@ class RegisterUserSerializer(serializers.ModelSerializer):
             role=validated_data.get("role", "Guest")
         )
         return user
+
 class AuthenticationSerializer(serializers.ModelSerializer):
     username=serializers.CharField(required=True)
     password=serializers.CharField(required=True, write_only=True)
