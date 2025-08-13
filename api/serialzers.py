@@ -3,6 +3,27 @@ from.models import (Course, Enrollment, Student, Instructor,Lesson,Choice,Questi
 
 
 
+
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Student
+        fields=["user", "student_number"]
+
+
+class CourseSerializer(serializers.ModelSerializer):
+      class Meta:
+          model=Course
+          fields=["id", "course_name", "description", "amount", "instructor", "enrolled_students"]
+          extra_kwargs = {
+             'id':{
+                 'read_only':True
+             }
+          }
+
+
+
+
+
 class ChoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model=Choice

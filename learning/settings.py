@@ -43,10 +43,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-        'payments',
-        'coursers'
-    ]
-     
+    'drf_yasg',
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
