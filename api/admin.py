@@ -37,7 +37,12 @@ class InstructorsAdmin(admin.ModelAdmin):
 
 @admin.register(Course)
 class CoursesAdmin(admin.ModelAdmin):
-    list_display = ["course_name"]
+    list_display = ["course_name", "get_enrolled_students", "description", "amount"]
+
+    def get_enrolled_students(self, obj):
+        return ", ".join([str(student) for student in obj.enrolled_students.all()])
+    get_enrolled_students.short_description = "Enrolled Students"
+
 
 
 @admin.register(Enrollment)

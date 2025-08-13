@@ -41,12 +41,11 @@ class Instructor(models.Model):
 
 
 class Course(models.Model):  
-    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='courses')
     instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE, related_name='courses')
     course_name = models.CharField(max_length=255)
-
-
-
+    enrolled_students=models.ManyToManyField(Student, through='Enrollment', related_name='courses')
+    description = models.TextField(default="no one")
+    amount = models.DecimalField(max_digits=10, decimal_places=2,null=True,blank=True)
 
     def __str__(self):
         return self.course_name
@@ -56,13 +55,21 @@ class Enrollment(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrollments')
     student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='enrollments')
     enrollment_date = models.DateTimeField(auto_now_add=True)
+    completed_date=models.DateTimeField(null=True, blank=True)
+    class   Meta:
+        verbose_name="Enrollment"
+        verbose_name_plural="Enrollments"
 
+    @property
+    def total_enrollment(self):
+        return self.course.enrollments.count()    
 
 class Lesson(models.Model):
     instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE, related_name='lessons',null=True, blank=True)
     title = models.CharField(max_length=255)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lessons')
     description = models.TextField()
+
 
     def __str__(self):
         return self.title
@@ -78,6 +85,7 @@ class Quiz(models.Model):
 
 class Question(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')
+    points=models.PositiveIntegerField(default=0)
     question_text = models.TextField()
 
     def __str__(self):
