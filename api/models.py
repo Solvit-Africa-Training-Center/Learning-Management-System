@@ -42,15 +42,13 @@ class Instructor(models.Model):
 
 
 class Course(models.Model):  
-    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name='courses')
     instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE, related_name='courses')
     course_name = models.CharField(max_length=255)
+    price= models.DecimalField(max_digits=10, decimal_places=2)
+    description = models.TextField()
 
     def __str__(self):
         return self.course_name
-    # payment status
-    def is_eligible_for_enrollment(self):
-        return hasattr(self, 'payment_status') and self.payment_status.approved
 
 
 class Enrollment(models.Model):
@@ -94,22 +92,6 @@ class Choice(models.Model):
         return self.choice_text
     
     # payment model
-class PaymentOrSponsorship(models.Model):
-    student = models.OneToOneField(Student, on_delete=models.CASCADE, related_name='payment_or_sponsorship')
-    payment ='payment'
-    SPOMSORSHIP = 'sponsorship'
-    TYPE_CHOICES= [
-        (payment, 'Payment'),
-        (SPOMSORSHIP, 'Sponsorship'),]
-    type = models.CharField(max_length=20, choices=TYPE_CHOICES, default=payment)
-    document = models.FileField(upload_to='payments/', null=True, blank=True)
-    approved = models.BooleanField(default=False)
-    crereated_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.student.user.first_name} {self.student.user.last_name} - {self.get_type_display()}"
-    def is_eligible(self):
-        return self.approved
     
 
 
