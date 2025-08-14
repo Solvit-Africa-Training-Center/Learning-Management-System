@@ -37,7 +37,7 @@ class QuizCreateView(generics.CreateAPIView):
             raise PermissionDenied("Only instructors can create quizzes.")
         lesson = serializer.validated_data['lesson']
         if lesson.course.instructor != instructor:
-            raise PermissionDenied("You do not have permission to create quizzes for this lesson.")
+            raise PermissionDenied("You do not have permission to create quizzes for this lesson come again.")
 
         serializer.save()
 
