@@ -41,15 +41,12 @@ INSTALLED_APPS = [
     'api',
     'accounts',
     'rest_framework',
-<<<<<<< HEAD
+
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-    'drf_yasg',
-=======
-    'payments',
-    'coursers'
+    'drf_yasg'
+
      
->>>>>>> student-enrollement
 ]
 
 MIDDLEWARE = [

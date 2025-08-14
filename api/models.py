@@ -44,21 +44,17 @@ class Instructor(models.Model):
 class Course(models.Model):  
     instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE, related_name='courses')
     course_name = models.CharField(max_length=255)
-<<<<<<< HEAD
+
     enrolled_students=models.ManyToManyField(Student, through='Enrollment', related_name='courses')
     description = models.TextField(default="no one")
     amount = models.DecimalField(max_digits=10, decimal_places=2,null=True,blank=True)
-=======
-    price= models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField()
->>>>>>> student-enrollement
 
     def __str__(self):
         return self.course_name
     # payment status
     def is_eligible_for_enrollment(self):
         return hasattr(self, 'payment_status') and self.payment_status.approved
-
 
 class Enrollment(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrollments')
