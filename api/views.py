@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from  rest_framework.exceptions import PermissionDenied
 from .models import *
 from .serialzers import *
+from django.shortcuts import get_object_or_404
 
 
 # Create your views here.
@@ -39,3 +40,8 @@ class QuizCreateView(generics.CreateAPIView):
             raise PermissionDenied("You do not have permission to create quizzes for this lesson.")
 
         serializer.save()
+
+class EnrollnCourse(generics.CreateAPIView):
+    queryset = Enrollment.objects.all()
+    serializer_class = EnrollmentSerializer
+    permission_classes = [permissions.IsAuthenticated]

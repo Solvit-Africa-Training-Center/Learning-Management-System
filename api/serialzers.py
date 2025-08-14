@@ -21,7 +21,21 @@ class CourseSerializer(serializers.ModelSerializer):
           }
 
 
-
+class EnrollmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Enrollment
+        fields=["id", "course", "student", "enrollment_date", "completed_date"]
+        extra_kwargs={
+            'id':{'read_only':True},
+            'enrollment_date': {'read_only': True},
+            'completed_date': {'read_only': True}
+        }
+    def validate(self,data):
+        course=data.get('course')
+        student=data.get('student')
+        if Enrollment.objects.filter(course=course, student=student).exists():
+            raise serializers.ValidationError("You are already enrolled in this course.")
+        return data
 
 
 class ChoiceSerializer(serializers.ModelSerializer):

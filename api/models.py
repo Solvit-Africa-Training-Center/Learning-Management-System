@@ -52,9 +52,7 @@ class Course(models.Model):
 
     def __str__(self):
         return self.course_name
-    # payment status
-    def is_eligible_for_enrollment(self):
-        return hasattr(self, 'payment_status') and self.payment_status.approved
+   
 
 class Enrollment(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrollments')
