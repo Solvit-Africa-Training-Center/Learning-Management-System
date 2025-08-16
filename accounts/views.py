@@ -21,7 +21,7 @@ class RegisterUserViewSet(viewsets.ModelViewSet):
         serializer=RegisterUserSerializer(data=request.data)
         if serializer.is_valid():
             user=serializer.save()
-            return Response({'message': 'User created successfully'})
+            return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=400)
 
 class LoginViewSet(viewsets.GenericViewSet):

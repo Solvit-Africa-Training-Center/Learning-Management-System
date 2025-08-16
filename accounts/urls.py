@@ -3,7 +3,7 @@ from .views import RegisterUserViewSet,LoginViewSet, LogoutViewSet
 from rest_framework import routers
 
 router=routers.DefaultRouter()
-router.register("user",RegisterUserViewSet)
+router.register("user",RegisterUserViewSet,basename="user")
 router.register("login",LoginViewSet,basename="login")
 router.register('logout', LogoutViewSet, basename='logout')
 
