@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from django.contrib.auth import  authenticate
 from accounts.models import CustomUser
-
+from api.models import StudentProgress
 
 
 class RegisterUserSerializer(serializers.ModelSerializer):
@@ -60,7 +60,12 @@ class AuthenticationSerializer(serializers.ModelSerializer):
         data["user"] = user
         return data
 
-        
+class StudentProgressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentProgress
+        fields = "__all__"
+
+     
 
 
     

@@ -1,11 +1,12 @@
 
 from rest_framework import viewsets, status
 from .models import CustomUser
+from api.models import StudentProgress
 from rest_framework.response import Response
 from rest_framework.decorators import permission_classes
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .serializer import RegisterUserSerializer, AuthenticationSerializer
+from .serializer import RegisterUserSerializer, AuthenticationSerializer, StudentProgressSerializer
 from django.contrib.auth import login, logout
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 
@@ -60,3 +61,9 @@ class LogoutViewSet(viewsets.GenericViewSet):
         except (TokenError, InvalidToken):
             return Response({"error": "Invalid or expired token"}, status=status.HTTP_400_BAD_REQUEST)
 # 
+
+
+class StudentProgressViewSet(viewsets.ModelViewSet):
+    queryset = StudentProgress.objects.all()
+    serializer_class = StudentProgressSerializer
+    permission_classes = [IsAuthenticated]
