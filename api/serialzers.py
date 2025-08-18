@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from.models import (Course, Enrollment, Student, Instructor,Lesson,Choice,Question,Quiz)
+from.models import (Course, Enrollment, Student, Instructor,Lesson,Choice,Question,Quiz, StudentProgress)
 
 
 
@@ -94,7 +94,6 @@ class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model=Lesson
         fields=["id", "title", "course", "description","instructor"]
-
 
 
 

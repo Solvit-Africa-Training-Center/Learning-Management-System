@@ -1,5 +1,6 @@
-from rest_framework import generics,permissions
+from rest_framework import generics,permissions,viewsets
 from rest_framework.response import Response
+from rest_framework import status
 from  rest_framework.exceptions import PermissionDenied
 from .models import *
 from .serialzers import *
@@ -45,3 +46,17 @@ class EnrollnCourse(generics.CreateAPIView):
     queryset = Enrollment.objects.all()
     serializer_class = EnrollmentSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(
+            {
+                "message": "Student progression created successfull",
+                "data": serializer.data
+            },
+            status=status.HTTP_201_CREATED
+        )
+
+

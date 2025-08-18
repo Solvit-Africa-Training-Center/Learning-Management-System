@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import (Student,Instructor,Course,
                      Enrollment,Lesson,
-                     Question,Quiz,
+                     Question,Quiz, StudentProgress,
                      Choice)
 
 # Register your models here.
@@ -70,7 +70,10 @@ class ChoicesAdmin(admin.ModelAdmin):
 
 
 
-       
+@admin.register(StudentProgress)
+class StudentProgressAdmin(admin.ModelAdmin):
+    list_display = ('student', 'course', 'progress', 'status', 'updated_at')  # optional, for better view
+ 
 
 
 

@@ -103,11 +103,17 @@ class Choice(models.Model):
     def __str__(self):
         return self.choice_text
     
-    # payment model
-    
+class StudentProgress(models.Model):
+    student = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    progress = models.FloatField(default=0.0)
+    status = models.CharField(max_length=25, choices=[
+        ('not_started', 'Not Started'),
+        ('in_progress', 'In Progress'),
+        ('completed', 'Completed')
+    ])
+    updated_at = models.DateTimeField(auto_now=True)
 
-
-    
 
 
 
