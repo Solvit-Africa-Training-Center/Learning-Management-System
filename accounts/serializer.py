@@ -57,4 +57,7 @@ class VerifyOtpSerizlizer(serializers.Serializer):
             raise serializers.ValidationError("Invalid OTP")
         if user.otp_expiry and user.otp_expiry<timezone.now():
             raise serializers.ValidationError("OTP has expired")
+        
+        user.is_verified=True
+        user.save()
         return data
