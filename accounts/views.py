@@ -59,6 +59,7 @@ class LoginViewSet(viewsets.GenericViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
+        # if not user.
         login(request, user)
         refresh = RefreshToken.for_user(user)
         return Response({
