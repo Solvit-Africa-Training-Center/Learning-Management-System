@@ -28,7 +28,6 @@ class AuthTest(APITestCase):
             first_name="mukunzi",
             last_name="innocent",
             username="mukunzi_innocent",
-
             email="existing@example.com",
             phone="0780000000",
             password="ngewe001@",
