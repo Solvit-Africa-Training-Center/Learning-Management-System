@@ -7,7 +7,7 @@ router=routers.DefaultRouter()
 router.register("user",RegisterUserViewSet,basename="user")
 router.register("login",LoginViewSet,basename="login")
 router.register('logout', LogoutViewSet, basename='logout')
-router.register(r'student progress', StudentProgressViewSet, basename='student progress')
+router.register(r'student-progress', StudentProgressViewSet, basename='student-progress')
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
