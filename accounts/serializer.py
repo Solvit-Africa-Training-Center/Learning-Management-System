@@ -1,5 +1,5 @@
 from rest_framework import serializers
-
+from django.utils import timezone
 from accounts.models import CustomUser
 
 
@@ -35,3 +35,26 @@ class RegisterUserSerializer(serializers.ModelSerializer):
             role=validated_data.get("role", "Guest")
         )
         return user
+
+
+
+
+class VerifyOtpSerizlizer(serializers.Serializer):
+    
+    email=serializers.EmailField()
+    otp=serializers.CharField(max_length=6)
+
+
+
+    def validate(self,data):
+        email=data.get("email")
+        otp=data.get("otp")
+        try:
+            user=CustomUser.objects.get(email=email)
+        except CustomUser.DoesNotExist:
+               raise serializers.ValidationError("User with this email does not exist")
+        if user.otp !=otp:
+            raise serializers.ValidationError("Invalid OTP")
+        if user.otp_expiry and user.otp_expiry<timezone.now():
+            raise serializers.ValidationError("OTP has expired")
+        return data
