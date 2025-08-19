@@ -1,11 +1,14 @@
 from  django.urls import path,include
-from .views import RegisterUserViewSet,LoginViewSet, LogoutViewSet
+from .views import RegisterUserViewSet,LoginViewSet, LogoutViewSet, ForgotPasswordViewSet, VerifyCodeViewSet,ResetPasswordViewSet
 from rest_framework import routers
 
 router=routers.DefaultRouter()
 router.register("user",RegisterUserViewSet,basename="user")
 router.register("login",LoginViewSet,basename="login")
 router.register('logout', LogoutViewSet, basename='logout')
+router.register('forgot-password', ForgotPasswordViewSet, basename='forgot-password')
+router.register('verify-code', VerifyCodeViewSet, basename='verify-code')
+router.register('reset-password', ResetPasswordViewSet, basename='reset-password')
 
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
