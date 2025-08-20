@@ -7,8 +7,7 @@ from django.utils import timezone
 from datetime import timedelta
 
 # ---------------------------
-# Auth Tests
-# ---------------------------
+# Auth Test
 
 class AuthTest(APITestCase):
     def setUp(self):
@@ -41,11 +40,9 @@ class AuthTest(APITestCase):
             phone="0780000000",
             password="ngewe001@",
             role="Guest",
-
-            is_verified=True
-
             is_verified=True,
             otp=1233
+
 
 
         )
@@ -69,9 +66,15 @@ class AuthTest(APITestCase):
 
         self.assertIn('message', response.data)
 
-# ---------------------------
-# Password Reset Tests
-# ---------------------------
+    def test_verify_otp(self):
+        verify_data=self.client.post(self.verify_otp_url,{
+            "email":"existing@example.com",
+            "otp":1233
+        },format='json')
+        self.assertEqual(verify_data.status_code, status.HTTP_200_OK)
+        self.assertIn('message', verify_data.data)
+        self.assertEqual(verify_data.data['message'], 'OTP verified successfully')        
+
 
 class PasswordResetFlowTest(APITestCase):
     def setUp(self):
@@ -84,13 +87,13 @@ class PasswordResetFlowTest(APITestCase):
             is_verified=True
         )
 
-        # Correct URL names
+        
         self.forgot_url = reverse("forgot-password-list")
         self.verify_url = reverse("verify-code-list")
         self.reset_url = reverse("reset-password-list")
         self.login_url = reverse("login-list")
 
-    # ---------- Forgot Password ----------
+    
     def test_forgot_password_success(self):
         response = self.client.post(self.forgot_url, {"email": self.user.email}, format="json")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -103,7 +106,6 @@ class PasswordResetFlowTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("email", response.data)
 
-    # ---------- Verify Code ----------
     def test_verify_code_success(self):
         PasswordResetCode.objects.create(user=self.user, code="123456")
         response = self.client.post(self.verify_url, {"email": self.user.email, "code": "123456"}, format="json")
@@ -124,7 +126,7 @@ class PasswordResetFlowTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("non_field_errors", response.data)
 
-    # ---------- Reset Password ----------
+    
     def test_reset_password_success(self):
         PasswordResetCode.objects.create(user=self.user, code="123456")
         response = self.client.post(self.reset_url, {
@@ -162,21 +164,18 @@ class PasswordResetFlowTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn("non_field_errors", response.data)
 
-    # ---------- Full Flow Test ----------
+    
     def test_full_password_reset_flow(self):
-        # Step 1: Forgot Password
+
         forgot_resp = self.client.post(self.forgot_url, {"email": self.user.email}, format="json")
         self.assertEqual(forgot_resp.status_code, status.HTTP_200_OK)
         self.assertIn("message", forgot_resp.data)
 
-        # Step 2: Get latest reset code
         code = PasswordResetCode.objects.filter(user=self.user).latest("created_at").code
 
-        # Step 3: Verify Code
         verify_resp = self.client.post(self.verify_url, {"email": self.user.email, "code": code}, format="json")
         self.assertEqual(verify_resp.status_code, status.HTTP_200_OK)
 
-        # Step 4: Reset Password
         reset_resp = self.client.post(self.reset_url, {
             "email": self.user.email,
             "code": code,
@@ -185,16 +184,11 @@ class PasswordResetFlowTest(APITestCase):
         }, format="json")
         self.assertEqual(reset_resp.status_code, status.HTTP_200_OK)
 
-        # Step 5: Confirm password updated
         self.user.refresh_from_db()
         self.assertTrue(self.user.check_password("finalpassword123"))
-        self.assertIn('message',response.data)
-    def test_verify_otp(self):
-        verify_data=self.client.post(self.verify_otp_url,{
-            "email":"existing@example.com",
-            "otp":1233
-        },format='json')
-        self.assertEqual(verify_data.status_code, status.HTTP_200_OK)
-        self.assertIn('message', verify_data.data)
-        self.assertEqual(verify_data.data['message'], 'OTP verified successfully')
+        self.assertIn('message', reset_resp.data)
+
+
+
+    
 
