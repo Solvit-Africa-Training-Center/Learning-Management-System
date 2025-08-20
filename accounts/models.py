@@ -29,6 +29,7 @@ class CustomUser(AbstractUser):
           
       def __str__(self):
             return self.username 
+
       
       def generate_otp(self):
             self.otp=''.join(random.choices(string.digits, k=6))
@@ -40,3 +41,11 @@ class CustomUser(AbstractUser):
                   return True
             else:
                   return False
+
+
+class PasswordResetCode(models.Model):
+      user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+      code = models.CharField(max_length=6)
+      created_at = models.DateTimeField(auto_now_add=True)
+
+
