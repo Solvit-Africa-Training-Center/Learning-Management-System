@@ -31,5 +31,4 @@ urlpatterns = [
     path("",include(router.urls)),
 
     path("verify-otp/",verifyOtpView.as_view(), name="verify-otp"),
-    
 ]
