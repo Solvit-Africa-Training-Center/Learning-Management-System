@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import permission_classes
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny, IsAuthenticated
+
 from .serializer import RegisterUserSerializer, AuthenticationSerializer, StudentProgressSerializer
 from django.contrib.auth import login, logout
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
@@ -15,7 +16,13 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from .serializer import RegisterUserSerializer,VerifyOtpSerizlizer
 
-
+from accounts.serializer import RegisterUserSerializer, AuthenticationSerializer
+from django.contrib.auth import login, logout
+from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
+from rest_framework import viewsets, status
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from  accounts.serializer import ForgotPasswordSerializer, VerifyCodeSerializer, ResetPasswordSerializer
 
 
 
@@ -84,7 +91,41 @@ class LogoutViewSet(viewsets.GenericViewSet):
         except (TokenError, InvalidToken):
             return Response({"error": "Invalid or expired token"}, status=status.HTTP_400_BAD_REQUEST)
 
+
 class StudentProgressViewSet(viewsets.ModelViewSet):
     queryset = StudentProgress.objects.all()
     serializer_class = StudentProgressSerializer
     permission_classes = [IsAuthenticated]
+
+class ForgotPasswordViewSet(viewsets.GenericViewSet):
+    permission_classes = [AllowAny]
+    serializer_class = ForgotPasswordSerializer
+
+    def create(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"message": "Verification code sent to email"}, status=200)
+
+
+
+class VerifyCodeViewSet(viewsets.GenericViewSet):
+    permission_classes = [AllowAny]
+    serializer_class = VerifyCodeSerializer
+
+    def create(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response({"message": "Code is valid"}, status=200)
+
+
+class ResetPasswordViewSet(viewsets.GenericViewSet):
+    permission_classes = [AllowAny]
+    serializer_class = ResetPasswordSerializer
+
+    def create(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"message": "Password reset successful"}, status=200)
+

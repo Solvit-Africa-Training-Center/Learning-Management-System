@@ -159,3 +159,5 @@ SIMPLE_JWT = {
     "BLACKLIST_AFTER_ROTATION": True,
     "ROTATE_REFRESH_TOKENS": False,  # or True if you want rotation
 }
+
+

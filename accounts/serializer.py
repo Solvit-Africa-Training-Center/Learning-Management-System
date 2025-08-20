@@ -7,6 +7,15 @@ from django.utils import timezone
 
 from accounts.models import CustomUser
 from api.models import StudentProgress
+from rest_framework import serializers
+from django.contrib.auth import authenticate
+from accounts.models import CustomUser, PasswordResetCode
+from django.contrib.auth.hashers import make_password
+from django.utils import timezone
+from datetime import timedelta
+from django.conf import settings
+import random
+from django.core.mail import send_mail
 
 
 class RegisterUserSerializer(serializers.ModelSerializer):
@@ -99,3 +108,83 @@ class VerifyOtpSerizlizer(serializers.Serializer):
         user.is_verified=True
         user.save()
         return data
+class ForgotPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def validate_email(self, value):
+        if not CustomUser.objects.filter(email=value).exists():
+            raise serializers.ValidationError("No user with this email found.")
+        return value
+
+    def save(self):
+        user = CustomUser.objects.filter(email=self.validated_data["email"]).first()
+        if not user:
+            # This should never happen because of validation, but safe to check
+            raise serializers.ValidationError("User not found.")
+
+        code = str(random.randint(100000, 999999))  # Generate a 6-digit code
+        PasswordResetCode.objects.create(user=user, code=code)
+
+        # Send code to user's email (here we just print it for testing)
+        print(f"Password reset code for {user.username}: {code}")
+
+        send_mail(
+            subject="Your Password Reset Code",
+            message=f"Hello {user.username}, your password reset code is: {code}",
+            from_email="gihozoismail@gmail.com",
+            recipient_list=[user.email],
+            fail_silently=False,
+        )
+
+        return user
+
+class VerifyCodeSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    code = serializers.CharField(max_length=6)
+
+    def validate(self, data):
+        user = CustomUser.objects.filter(email=data["email"]).first()  # ✅ fixed
+        if not user:
+            raise serializers.ValidationError("No user with this email found.")
+
+        reset_code = PasswordResetCode.objects.filter(user=user, code=data["code"]).first()
+        if not reset_code:
+            raise serializers.ValidationError("Invalid or expired code.")
+
+        if reset_code.created_at < timezone.now() - timedelta(minutes=10):
+            raise serializers.ValidationError("Code has expired.")
+
+        data["user"] = user
+        return data
+
+
+
+class ResetPasswordSerializer(serializers.Serializer):  # ✅ fixed name
+    email = serializers.EmailField()
+    code = serializers.CharField(max_length=6)
+    new_password = serializers.CharField(write_only=True)
+    confirm_password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        if data["new_password"] != data["confirm_password"]:
+            raise serializers.ValidationError("Passwords do not match")
+
+        try:
+            user = CustomUser.objects.get(email=data["email"])
+            reset_code = PasswordResetCode.objects.filter(user=user, code=data["code"]).latest("created_at")
+        except (CustomUser.DoesNotExist, PasswordResetCode.DoesNotExist):
+            raise serializers.ValidationError("Invalid request")
+
+        if timezone.now() > reset_code.created_at + timedelta(minutes=10):
+            raise serializers.ValidationError("Code expired")
+
+        data["user"] = user
+        return data
+
+    def save(self):
+        user = self.validated_data["user"]
+        user.password = make_password(self.validated_data["new_password"])
+        user.save()
+        
+        return user
+

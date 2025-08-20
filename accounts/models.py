@@ -23,12 +23,10 @@ class CustomUser(AbstractUser):
 
       otp=models.CharField(max_length=6, blank=True, null=True)
       otp_expiry=models.DateTimeField(blank=True, null=True)
-      is_verified=models.BooleanField(default=False)
-
-      
-          
+      is_verified=models.BooleanField(default=False)   
       def __str__(self):
             return self.username 
+
       
       def generate_otp(self):
             self.otp=''.join(random.choices(string.digits, k=6))
@@ -40,3 +38,11 @@ class CustomUser(AbstractUser):
                   return True
             else:
                   return False
+
+
+class PasswordResetCode(models.Model):
+      user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+      code = models.CharField(max_length=6)
+      created_at = models.DateTimeField(auto_now_add=True)
+
+
