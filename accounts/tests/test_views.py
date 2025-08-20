@@ -12,9 +12,16 @@ from datetime import timedelta
 
 class AuthTest(APITestCase):
     def setUp(self):
+
         self.register_url = reverse("user-list")
         self.login_url = reverse("login-list")
         self.logout_url = reverse("logout-list")
+
+        self.register_url=reverse("user-list")
+        self.login_url=reverse("login-list")
+        self.logout_url=reverse("logout-list")
+        self.verify_otp_url=reverse("verify-otp")
+ 
         self.user_data = {
             "first_name": "Test",
             "last_name": "User",
@@ -34,7 +41,13 @@ class AuthTest(APITestCase):
             phone="0780000000",
             password="ngewe001@",
             role="Guest",
+
             is_verified=True
+
+            is_verified=True,
+            otp=1233
+
+
         )
 
     def test_user_registration(self):
@@ -53,6 +66,7 @@ class AuthTest(APITestCase):
             "refresh": refresh_token
         }, format='json')
         self.assertEqual(response.status_code, status.HTTP_205_RESET_CONTENT)
+
         self.assertIn('message', response.data)
 
 # ---------------------------
@@ -174,3 +188,13 @@ class PasswordResetFlowTest(APITestCase):
         # Step 5: Confirm password updated
         self.user.refresh_from_db()
         self.assertTrue(self.user.check_password("finalpassword123"))
+        self.assertIn('message',response.data)
+    def test_verify_otp(self):
+        verify_data=self.client.post(self.verify_otp_url,{
+            "email":"existing@example.com",
+            "otp":1233
+        },format='json')
+        self.assertEqual(verify_data.status_code, status.HTTP_200_OK)
+        self.assertIn('message', verify_data.data)
+        self.assertEqual(verify_data.data['message'], 'OTP verified successfully')
+
