@@ -16,13 +16,13 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from .serializer import RegisterUserSerializer,VerifyOtpSerizlizer
 
-from .serializers import RegisterUserSerializer, AuthenticationSerializer
+from accounts.serializer import RegisterUserSerializer, AuthenticationSerializer
 from django.contrib.auth import login, logout
 from rest_framework_simplejwt.exceptions import TokenError, InvalidToken
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-from .serializers import ForgotPasswordSerializer, VerifyCodeSerializer, ResetPasswordSerializer
+from  accounts.serializer import ForgotPasswordSerializer, VerifyCodeSerializer, ResetPasswordSerializer
 
 
 
