@@ -60,3 +60,13 @@ class EnrollnCourse(generics.CreateAPIView):
         )
 
 
+
+
+
+class CourseListView(generics.ListAPIView):
+    queryset=Course.objects                  .all()
+    serializer_class=CourseSerializer
+    def get(self, request,*arg,**kwargs):
+        serializer=CourseSerializer(self.get_queryset(), many=True)
+        return Response(serializer.data)
+    
