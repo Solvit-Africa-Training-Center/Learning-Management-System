@@ -13,6 +13,7 @@ urlpatterns=[
     path('quizzes/',QuizCreateView.as_view(),name='quiz-list-create'),
 
     path('enroll/',EnrollnCourse.as_view(), name='enroll'),
+    path('courses/',CourseListView.as_view(),name="course-list")
     
 
 ]
